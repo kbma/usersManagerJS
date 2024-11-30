@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Recherche de Lieu - Nominatim</title>
+</head>
+<body>
+    <h1>Géolocalisation d'un Lieu</h1>
+    <input type="text" id="place" placeholder="Entrez un lieu" />
+    <button onclick="getLocation()">Trouver</button>
+    <div id="location"></div>
+
+    <script>
+        function getLocation() {
+            const place = document.getElementById('place').value;
+            fetch(`https://nominatim.openstreetmap.org/search?q=${place}&format=json`)
+                .then(response => response.json())
+                .then(data => {
+                    if (data.length > 0) {
+                        const location = data[0];
+                        document.getElementById('location').innerHTML = `
+                            <strong>Lieu:</strong> ${location.display_name} <br>
+                            <strong>Latitude:</strong> ${location.lat} <br>
+                            <strong>Longitude:</strong> ${location.lon}
+                        `;
+                    } else {
+                        document.getElementById('location').innerText = 'Lieu non trouvé';
+                    }
+                })
+                .catch(error => console.error('Erreur lors de la recherche:', error));
+        }
+    </script>
+</body>
+</html>

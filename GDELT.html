@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Requête API GDELT</title>
+</head>
+<body>
+
+  <h1>Récupération des données de l'API GDELT</h1>
+  <button id="fetchButton">Charger les données</button>
+  <pre id="output"></pre>
+
+  <script>
+    document.getElementById('fetchButton').addEventListener('click', function() {
+      fetch('https://api.gdeltproject.org/api/v2/doc/doc?query=military&mode=artlist&maxrecords=10')
+        .then(response => {
+          // Vérifier si la réponse est correcte (code 200)
+          if (!response.ok) {
+            throw new Error('Network response was not ok');
+          }
+
+          // Afficher le type de contenu
+          console.log('Content-Type:', response.headers.get('Content-Type'));
+
+          // Lire la réponse sous forme de texte brut pour déboguer
+          return response.text();
+        })
+        .then(text => {
+          // Afficher la réponse brute pour débogage
+          console.log('Response Text:', text);
+
+          // Tenter de convertir la réponse en JSON
+          try {
+            const data = JSON.parse(text);
+            console.log(data);
+
+            // Afficher les résultats dans le HTML
+            const output = document.getElementById('output');
+            output.textContent = JSON.stringify(data, null, 2); // Formater le JSON pour l'affichage
+          } catch (error) {
+            console.error('Erreur lors de la conversion en JSON:', error);
+            const output = document.getElementById('output');
+            output.textContent = 'Erreur de conversion JSON. Vérifiez la réponse API.';
+          }
+        })
+        .catch(error => {
+          // Gérer les erreurs (par exemple, si la requête échoue)
+          console.error('Il y a un problème avec l\'opération fetch:', error);
+        });
+    });
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USGS Earthquake Data</title>
+</head>
+<body>
+    <h1>Derniers Séismes</h1>
+    <div id="earthquake-list"></div>
+
+    <script>
+        fetch('https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&limit=5&orderby=time')
+            .then(response => response.json())
+            .then(data => {
+                let earthquakes = data.features;
+                let output = '<ul>';
+                earthquakes.forEach(earthquake => {
+                    output += `
+                        <li>
+                            <strong>Lieu:</strong> ${earthquake.properties.place} <br>
+                            <strong>Magnitude:</strong> ${earthquake.properties.mag} <br>
+                            <strong>Heure:</strong> ${new Date(earthquake.properties.time).toLocaleString()}
+                        </li>`;
+                });
+                output += '</ul>';
+                document.getElementById('earthquake-list').innerHTML = output;
+            })
+            .catch(error => console.error('Erreur lors de la récupération des données:', error));
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alertes GDACS</title>
+</head>
+<body>
+    <h1>Alertes de Catastrophes</h1>
+    <div id="disaster-alerts"></div>
+
+    <script>
+        fetch('https://www.gdacs.org/gdacsapi?alertlevel=Red')
+            .then(response => response.json())
+            .then(data => {
+                let alerts = data.alerts;
+                let output = '<ul>';
+                alerts.forEach(alert => {
+                    output += `
+                        <li>
+                            <strong>Catastrophe:</strong> ${alert.eventType} <br>
+                            <strong>Lieu:</strong> ${alert.countryName} <br>
+                            <strong>Date:</strong> ${alert.date}
+                        </li>`;
+                });
+                output += '</ul>';
+                document.getElementById('disaster-alerts').innerHTML = output;
+            })
+            .catch(error => console.error('Erreur lors de la récupération des alertes:', error));
+    </script>
+</body>
+</html>

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hôpitaux en Californie</title>
+</head>
+<body>
+    <h1>Liste des Hôpitaux</h1>
+    <div id="hospitals-list"></div>
+
+    <script>
+        fetch('https://api.healthdata.gov/v1/organizations/hospitals?state=California')
+            .then(response => response.json())
+            .then(data => {
+                let hospitals = data;
+                let output = '<ul>';
+                hospitals.forEach(hospital => {
+                    output += `
+                        <li>
+                            <strong>Nom:</strong> ${hospital.name} <br>
+                            <strong>Adresse:</strong> ${hospital.address} <br>
+                            <strong>Téléphone:</strong> ${hospital.phone_number}
+                        </li>`;
+                });
+                output += '</ul>';
+                document.getElementById('hospitals-list').innerHTML = output;
+            })
+            .catch(error => console.error('Erreur lors de la récupération des hôpitaux:', error));
+    </script>
+</body>
+</html>

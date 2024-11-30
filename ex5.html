@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Météo de votre ville</title>
+    <!-- Lien vers Font Awesome pour les icônes -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <!-- Lien vers le fichier CSS externe -->
+    <style>
+        body {
+    font-family: Arial, sans-serif;
+    background-color: #f0f4f8;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #2c3e50;
+    font-size: 2rem;
+    margin-bottom: 20px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 300px;
+    font-size: 1rem;
+    margin-right: 10px;
+    border: 2px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #3498db;
+    color: white;
+    font-size: 1rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #2980b9;
+}
+
+.weather-info {
+    display: none;
+    margin-top: 20px;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+#weather h2 {
+    color: #3498db;
+    font-size: 1.5rem;
+}
+
+.details {
+    margin-top: 15px;
+    font-size: 1.1rem;
+}
+
+#weather-icon {
+    width: 100px;
+    height: 100px;
+    margin-top: 20px;
+}
+
+    </style>
+
+    <script>
+        function getWeather() {
+    var city = document.getElementById('city').value;
+    var apiKey = '6bfdc0ec4f1017a9ce36bed434e75f82'; // Remplacez par votre propre clé API de OpenWeather
+    var url = `https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${apiKey}&units=metric&lang=fr`;
+
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState === 4 && xhr.status === 200) {
+            var data = JSON.parse(xhr.responseText);
+            var weather = data.weather[0];
+            var main = data.main;
+            var wind = data.wind;
+
+            // Affichage des informations météo
+            document.getElementById('weather-info').style.display = 'block';
+            document.getElementById('weather').style.display = 'block';
+            document.getElementById('description').textContent = weather.description;
+            document.getElementById('temperature').textContent = main.temp;
+            document.getElementById('humidity').textContent = main.humidity;
+            document.getElementById('wind').textContent = wind.speed;
+
+            // Mise à jour de l'icône météo
+            var icon = `http://openweathermap.org/img/wn/${weather.icon}.png`;
+            document.getElementById('weather-icon').src = icon;
+
+            // Mise à jour du titre avec la ville
+            document.querySelector('#weather h2').textContent = `Météo à ${data.name}`;
+        } else if (xhr.readyState === 4) {
+            alert('Erreur lors de la récupération des données');
+        }
+    };
+    xhr.send();
+}
+
+    </script>
+</head>
+<body>
+    <div class="container">
+        <h1>Vérifiez la météo de votre ville</h1>
+        <input type="text" id="city" placeholder="Entrez le nom de la ville...">
+        <button onclick="getWeather()">Obtenir la météo</button>
+
+        <div id="weather-info" class="weather-info">
+            <div id="weather">
+                <h2></h2>
+                <p id="description"></p>
+                <div class="details">
+                    <p><span id="temperature"></span> °C</p>
+                    <p><span id="humidity"></span>% Humidité</p>
+                    <p><span id="wind"></span> km/h Vent</p>
+                </div>
+                <img id="weather-icon" src="" alt="Icone météo">
+            </div>
+        </div>
+    </div>
+    <!-- Lien vers le fichier JavaScript -->
+</body>
+</html>
+
+
+
+
+
+
+
+

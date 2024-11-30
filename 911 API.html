@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Appels d'Urgence 911</title>
+</head>
+<body>
+    <h1>Appels d'Urgence Actuels</h1>
+    <div id="emergency-calls"></div>
+
+    <script>
+        fetch('https://api.911.gov/v1/calls?status=active&limit=5')
+            .then(response => response.json())
+            .then(data => {
+                let calls = data.calls;
+                let output = '<ul>';
+                calls.forEach(call => {
+                    output += `
+                        <li>
+                            <strong>Type:</strong> ${call.type} <br>
+                            <strong>Adresse:</strong> ${call.location} <br>
+                            <strong>Date:</strong> ${call.date_time}
+                        </li>`;
+                });
+                output += '</ul>';
+                document.getElementById('emergency-calls').innerHTML = output;
+            })
+            .catch(error => console.error('Erreur lors de la récupération des appels:', error));
+    </script>
+</body>
+</html>

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Top Headlines</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f9;
+      margin: 0;
+      padding: 0;
+    }
+    h1 {
+      text-align: center;
+      padding: 20px;
+      background-color: #4CAF50;
+      color: white;
+    }
+    #news-articles {
+      max-width: 900px;
+      margin: 20px auto;
+      padding: 10px;
+    }
+    .article {
+      background-color: white;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      display: flex;
+      flex-direction: row;
+    }
+    .article img {
+      max-width: 200px;
+      object-fit: cover;
+      height: 150px;
+    }
+    .article-content {
+      padding: 15px;
+      flex: 1;
+    }
+    .article h2 {
+      font-size: 20px;
+      margin: 0 0 10px;
+      color: #333;
+    }
+    .article p {
+      color: #555;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+    .article a {
+      color: #4CAF50;
+      text-decoration: none;
+    }
+    .article a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <h1>Top News Headlines</h1>
+  <div id="news-articles"></div>
+
+  <script>
+    // Remplacez YOUR_API_KEY par votre clé API personnelle obtenue de NewsAPI
+    fetch('https://newsapi.org/v2/top-headlines?sources=techcrunch&apiKey=de674c86f8024e8bae4f3a9f20caaddc')
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+      })
+      .then(data => {
+        const articlesContainer = document.getElementById('news-articles');
+        data.articles.forEach(article => {
+          const articleElement = document.createElement('div');
+          articleElement.classList.add('article');
+          
+          // Ajouter l'image de l'article
+          const articleImage = article.urlToImage ? article.urlToImage : 'https://via.placeholder.com/200'; // Image par défaut si aucune image n'est disponible
+          const articleContent = `
+            <div class="article">
+              <img src="${articleImage}" alt="Article Image">
+              <div class="article-content">
+                <h2><a href="${article.url}" target="_blank">${article.title}</a></h2>
+                <p>${article.description || 'No description available.'}</p>
+              </div>
+            </div>
+          `;
+
+          articleElement.innerHTML = articleContent;
+          articlesContainer.appendChild(articleElement);
+        });
+      })
+      .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+      });
+  </script>
+</body>
+</html>

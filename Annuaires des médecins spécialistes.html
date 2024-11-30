@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Consommer l'API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+
+        h1 {
+            color: #333;
+        }
+
+        .data-container {
+            background-color: #fff;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .data-container ul {
+            list-style-type: none;
+            padding: 0;
+        }
+
+        .data-container li {
+            padding: 10px;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .data-container li:last-child {
+            border-bottom: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Consommation de l'API du Gouvernement Tunisien</h1>
+
+    <div class="data-container" id="data-container">
+        <p>Chargement des données...</p>
+    </div>
+
+    <script>
+        // URL de l'API (fichier JSON)
+        const apiUrl = 'https://catalog.data.gov.tn/fr/dataset/annuaires-des-medecins-specialistes-dans-le-secteur-prive/resource/b1420883-a848-4be0-b7d7-6fc913443df1/view/87441cd6-9ada-4ddd-9028-1fda66188cd5';
+
+        // Fonction pour récupérer les données de l'API
+        function fetchData() {
+            fetch(apiUrl)
+                .then(response => response.json())
+                .then(data => {
+                    // Vérifier si les données existent
+                    if (data && Array.isArray(data)) {
+                        displayData(data);
+                    } else {
+                        throw new Error('Données invalides');
+                    }
+                })
+                .catch(error => {
+                    console.error('Erreur lors de la récupération des données:', error);
+                    document.getElementById('data-container').innerHTML = '<p>Erreur de chargement des données.</p>';
+                });
+        }
+
+        // Fonction pour afficher les données
+        function displayData(data) {
+            let html = '<ul>';
+
+            // Parcours des données et affichage dans une liste
+            data.forEach(item => {
+                html += `<li><strong>${item.title || 'Titre inconnu'}</strong><br>${item.description || 'Aucune description disponible'}</li>`;
+            });
+
+            html += '</ul>';
+            document.getElementById('data-container').innerHTML = html;
+        }
+
+        // Appel de la fonction pour récupérer les données au chargement de la page
+        fetchData();
+    </script>
+</body>
+</html>
