@@ -1,32 +1,87 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Appels d'Urgence 911</title>
+    <title>Appels 911</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
-<body>
-    <h1>Appels d'Urgence Actuels</h1>
-    <div id="emergency-calls"></div>
 
+<body class="bg-light">
+    <div class="container my-5">
+        <h1 class="text-center mb-4">Données des appels 911</h1>
+
+        <table class="table table-striped table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th>ID</th>
+                    <th>Date</th>
+                    <th>Type</th>
+                    <th>Lieu</th>
+                    <th>Statut</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody id="calls-data">
+                <tr>
+                    <td colspan="6" class="text-center">Chargement des données...</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- JavaScript -->
     <script>
-        fetch('https://api.911.gov/v1/calls?status=active&limit=5')
+        const apiUrl = "https://hc911server.com/api/calls";
+
+        fetch(apiUrl)
             .then(response => response.json())
             .then(data => {
-                let calls = data.calls;
-                let output = '<ul>';
-                calls.forEach(call => {
-                    output += `
-                        <li>
-                            <strong>Type:</strong> ${call.type} <br>
-                            <strong>Adresse:</strong> ${call.location} <br>
-                            <strong>Date:</strong> ${call.date_time}
-                        </li>`;
-                });
-                output += '</ul>';
-                document.getElementById('emergency-calls').innerHTML = output;
+                const tbody = document.getElementById('calls-data');
+                tbody.innerHTML = ""; // Vider le contenu par défaut
+
+                if (data && data.length > 0) {
+                    data.forEach(call => {
+                        const id = call.id || "Non disponible";
+                        const date = call.date ? new Date(call.date).toLocaleString() : "Non précisée";
+                        const type = call.type || "Non disponible";
+                        const location = call.location || "Non précisé";
+                        const status = call.status || "Non précisé";
+                        const description = call.description || "Non disponible";
+
+                        tbody.innerHTML += `
+                            <tr>
+                                <td>${id}</td>
+                                <td>${date}</td>
+                                <td>${type}</td>
+                                <td>${location}</td>
+                                <td>${status}</td>
+                                <td>${description}</td>
+                            </tr>
+                        `;
+                    });
+                } else {
+                    tbody.innerHTML = `
+                        <tr>
+                            <td colspan="6" class="text-center">Aucun appel trouvé</td>
+                        </tr>
+                    `;
+                }
             })
-            .catch(error => console.error('Erreur lors de la récupération des appels:', error));
+            .catch(error => {
+                console.error("Erreur lors de la récupération des données : ", error);
+                document.getElementById('calls-data').innerHTML = `
+                    <tr>
+                        <td colspan="6" class="text-center text-danger">Erreur lors de la récupération des données</td>
+                    </tr>
+                `;
+            });
     </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
+
 </html>

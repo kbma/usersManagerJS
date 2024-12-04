@@ -16,7 +16,7 @@
             var apiKey = 'MFah4mEEzRxxtWfCKNNwz3JuWHXyUM6H';  // Remplacez par votre clé API
             var xhr = new XMLHttpRequest();
             var url = `https://api.giphy.com/v1/gifs/search?api_key=${apiKey}&q=${keyword}&limit=1`;
-
+            console.log(url)
             xhr.open('GET', url);
             xhr.onreadystatechange = function() {
                 if (xhr.readyState === 4 && xhr.status === 200) {

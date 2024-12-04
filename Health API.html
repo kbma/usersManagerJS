@@ -3,30 +3,65 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hôpitaux en Californie</title>
+    <title>Health Data Table</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css">
 </head>
 <body>
-    <h1>Liste des Hôpitaux</h1>
-    <div id="hospitals-list"></div>
+<div class="container mt-5">
+    <h2 class="mb-4">Health Data Table</h2>
+    <table class="table table-bordered table-hover">
+        <thead class="table-dark">
+            <tr>
+                <th>#</th>
+                <th>Date de mise à jour</th>
+                <th>Jours depuis mise à jour</th>
+                <th>Utilisateur</th>
+                <th>Archive</th>
+            </tr>
+        </thead>
+        <tbody id="health-data">
+            <!-- Contenu généré dynamiquement -->
+        </tbody>
+    </table>
+</div>
 
-    <script>
-        fetch('https://api.healthdata.gov/v1/organizations/hospitals?state=California')
-            .then(response => response.json())
-            .then(data => {
-                let hospitals = data;
-                let output = '<ul>';
-                hospitals.forEach(hospital => {
-                    output += `
-                        <li>
-                            <strong>Nom:</strong> ${hospital.name} <br>
-                            <strong>Adresse:</strong> ${hospital.address} <br>
-                            <strong>Téléphone:</strong> ${hospital.phone_number}
-                        </li>`;
-                });
-                output += '</ul>';
-                document.getElementById('hospitals-list').innerHTML = output;
-            })
-            .catch(error => console.error('Erreur lors de la récupération des hôpitaux:', error));
-    </script>
+<script>
+    const data = [
+        {
+            "update_date": "2021-02-25T20:57:12.000",
+            "days_since_update": "0",
+            "user": "Tyler Service Account - HHS",
+            "archive_link": {
+                "url": "https://finder.healthcare.gov/%23services"
+            }
+        },
+        {
+            "update_date": "2021-03-12T18:09:17.000",
+            "days_since_update": "15",
+            "user": "Tyler Service Account - HHS",
+            "archive_link": {
+                "url": "https://finder.healthcare.gov/%23services"
+            }
+        }
+    ];
+
+    const tbody = document.getElementById('health-data');
+    data.forEach((item, index) => {
+        const updateDate = item.update_date || "Non disponible";
+        const daysSinceUpdate = item.days_since_update || "Non disponible";
+        const user = item.user || "Non spécifié";
+        const archiveUrl = item.archive_link?.url || "#";
+
+        tbody.innerHTML += `
+            <tr>
+                <td>${index + 1}</td>
+                <td>${updateDate}</td>
+                <td>${daysSinceUpdate}</td>
+                <td>${user}</td>
+                <td><a href="${archiveUrl}" class="btn btn-primary btn-sm" target="_blank">Voir</a></td>
+            </tr>
+        `;
+    });
+</script>
 </body>
 </html>
